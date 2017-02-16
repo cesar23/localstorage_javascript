@@ -1,0 +1,155 @@
+    <!DOCTYPE HTML>
+    <html>
+      <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+       <title>Your Website</title>
+       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Sellegance - OpenCart Theme" />
+      </head>
+      <body>
+
+      <button  onclick="guardartime()">Guardar time</button>
+      <button  onclick="mostrarTiempoTranscurrido()">Mostrar Tiempo</button>
+
+      <div style="width: 350px;">
+<p>Hora inicio (hh:mm): <input type="text" id="inicio" value="" /></p>
+<p>Hora fin (hh:mm):<input type="text" id="fin" value="" /></p>
+<p><input type="button" onclick="calcular();" value="Restar horas"></p>
+<p>&nbsp;</p>
+<p>Tiempo transcurrido: <input type="text" id="resta" value="" /></p>
+</div>
+       
+       Probando Localstorage:<br>
+<div id="result"></div>
+<script>
+var ejcecucion;
+(function() {
+
+
+ ejcecucion = setInterval(function(){ alertFunc() }, 1000);
+
+
+
+function alertFunc() {
+    mostrarTiempoTranscurrido();
+   
+}
+    
+    
+})();
+///----------------------------------------------------------
+
+
+function guardartime(){
+	var now = new Date().getTime();
+	var testObject = { 'activo': 1, 'tiempo': now };
+// Put the object into storage
+localStorage.setItem('tiempo_guardado', JSON.stringify(testObject));
+}
+
+
+
+function mostrarTiempoTranscurrido(){
+		var hours = 24; // Reset when storage is more than 24hours
+		var minuto=60;
+		var segundo=60;
+		var tiempo_actual = new Date().getTime();
+		//var tiempo_guardado = localStorage.getItem('tiempo_guardado');
+		var tiempo_guardado = JSON.parse(localStorage.getItem("tiempo_guardado"));		
+
+
+		var segundos_humano=hours*60*60;//con esto sacamos cuantos segundos tiene un dia
+		var segundos_timestamp=hours*60*60*1000;//con esto sacamos cuantos segundos tiene un dia a timestamp
+
+if (tiempo_guardado == null) {
+
+} else {
+
+	tiempo_restante=tiempo_actual-tiempo_guardado.tiempo;//esto ira  aumentado conforme pase el tiempo
+	document.getElementById("result").innerHTML = tiempo_restante;
+
+	//si ah pasado mas de un dia
+    if(tiempo_restante > hours*60*60*1000) {
+       alert("ya paso un dia");
+    }
+
+    //si ah pasado mas de una hora
+    if(tiempo_restante > 60*60*1000) {
+       alert("ya paso un hora");
+    }
+
+    //si ah pasado mas de una hora
+   // if(tiempo_restante > (2*60)*1000) {//ah pasado 2 minutos
+    if(tiempo_restante > 60*1000) {//ah pasado minuto
+    	clearInterval(ejcecucion);
+       alert("ya paso un minuto");
+        
+    }
+
+}
+
+
+
+}
+
+
+// var hours = 24; // Reset when storage is more than 24hours
+// var now = new Date().getTime();
+// var tiempo_guardado = localStorage.getItem('tiempo_guardado');
+// console.log("tiempo ahora:"+now);
+// document.getElementById("result").innerHTML = tiempo_guardado;
+
+// var segundos_humano=hours*60*60;//con esto sacamos cuantos segundos tiene un dia
+// var segundos_timestamp=hours*60*60*1000;//con esto sacamos cuantos segundos tiene un dia a timestamp
+
+
+// if (tiempo_guardado == null) {
+//     localStorage.setItem('tiempo_guardado', now);
+// } else {
+// 	console.log("tiempo restante"+now-tiempo_guardado);
+
+//     if(now-tiempo_guardado > hours*60*60*1000) {
+//         localStorage.clear();
+//         localStorage.setItem('tiempo_guardado', now);
+//     }
+// }
+
+
+
+
+function restarHoras(inicio,fin) {
+
+var fechaInicio = new Date(inicio).getTime();//timestamp 
+
+var fechaFin = new Date(fin).getTime();
+
+var dif= fechaFin - fechaInicio; // diferencia en milisegundos
+
+var difSeg = Math.floor(dif/1000); //diferencia en segundos
+
+var segundos = difSeg % 60; //segundos
+console.log("diferencia segundos: "+difSeg);
+
+var difMin = Math.floor(difSeg/60); //diferencia en minutos
+
+var minutos = difMin % 60; //minutos
+console.log("diferencia minutos: "+minutos);
+
+var difHs = Math.floor(difMin/60); //diferencia en horas
+
+var horas = difHs % 24; //horas
+console.log("diferencia horas: "+difHs);
+
+return horas+":"+minutos+":"+segundos; //armo el tiempo de diferencia
+
+}
+
+</script>
+       
+
+      </body>
+
+    </html>
+    
